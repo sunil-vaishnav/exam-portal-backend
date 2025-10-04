@@ -13,10 +13,20 @@ class Form extends Model
         'title',
         'description',
         'fields',
-        'created_by',
+        'active',
+        'start_at',
+        'end_at',
     ];
 
     protected $casts = [
-        'fields' => 'array'
+        'fields' => 'array',
+        'active' => 'boolean',
+        'start_at' => 'datetime',
+        'end_at' => 'datetime',
     ];
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
+    }
 }

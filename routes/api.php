@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\FormController;
 use App\Http\Controllers\API\SubmissionController;
-//use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,14 +35,15 @@ Route::middleware('jwt.auth')->group(function(){
     Route::get('submissions', [SubmissionController::class,'index']); 
     Route::get('submissions/{id}', [SubmissionController::class,'show']);
 
-    // Route::post('payments/initiate', [PaymentController::class,'initiate']);
-    // Route::post('payments/verify', [PaymentController::class,'verify']);
+    Route::post('payments/initiate', [PaymentController::class,'initiate']);
+    Route::post('payments/verify', [PaymentController::class,'verify']);
 });
 
 // admin-only
 Route::middleware(['jwt.auth','role:admin'])->group(function(){
     Route::post('forms/create', [FormController::class,'create']);
+    Route::put('forms/update/{form}', [FormController::class,'update']);
     Route::delete('forms/delete/{form}', [FormController::class,'destroy']);
     Route::get('admin/submissions', [SubmissionController::class,'adminIndex']);
-    //Route::get('admin/payments', [PaymentController::class,'adminIndex']);
+    Route::get('admin/payments', [PaymentController::class,'adminIndex']);
 });

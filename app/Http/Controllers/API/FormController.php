@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Form;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class FormController extends Controller
 {
@@ -14,12 +15,17 @@ class FormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $forms = Form::get();
+        $limit = isset($request->limit) && !empty($request->limit) ? $request->limit : 10;  
+        $page = isset($request->page) && !empty($request->page) ? $request->page : 0;
+
+        $forms = Form::with('submissions')->skip($page)->take($limit)->get();
+        $total = Form::count();
         $res = array(
             'status' => true,
             'message' => 'Forms fetch successfully',
+            'total_forms' => $total,
             'forms' => $forms
         );
 
@@ -50,8 +56,8 @@ class FormController extends Controller
         $form->title = $request->title;
         $form->description = isset($request->description) && !empty($request->description) ? $request->description : null;
         $form->fields = isset($request->fields) && !empty($request->fields) ? json_encode($request->fields) : null;
-        $form->start_at = isset($request->start_at) && !empty($request->start_at) ? $request->start_at : null;
-        $form->end_at = isset($request->end_at) && !empty($request->end_at) ? $request->end_at : null;
+        $form->start_at = isset($request->start_at) && !empty($request->start_at) ? Carbon::parse($request->start_at) : null;
+        $form->end_at = isset($request->end_at) && !empty($request->end_at) ? Carbon::parse($request->end_at) : null;
         $form->save();
 
         $res = array(
@@ -72,7 +78,7 @@ class FormController extends Controller
      */
     public function show($id)
     {
-        $form = Form::find($id);
+        $form = Form::with('submissions')->find($id);
         $res = array(
             'status' => true,
             'message' => 'Form fetch successfully',
@@ -92,7 +98,36 @@ class FormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $form = Form::find($id);
+        if(empty($form)){
+            return response()->json(['status' => false,'message' => 'Please provide vaild form id'], 200);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'fields' => 'nullable|array',
+            'start_at' => 'nullable|date',
+            'end_at' => 'nullable|date',
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['status' => false,'message' => $validator->errors()], 200);
+        }
+
+        $form->title = $request->title;
+        $form->description = isset($request->description) && !empty($request->description) ? $request->description : $form->description;
+        $form->fields = isset($request->fields) && !empty($request->fields) ? json_encode($request->fields) : $form->fields;
+        $form->start_at = isset($request->start_at) && !empty($request->start_at) ? Carbon::parse($request->start_at) : $request->start_at;
+        $form->end_at = isset($request->end_at) && !empty($request->end_at) ? Carbon::parse($request->end_at) : $request->end_at;
+        $form->update();
+
+        $res = array(
+            'status' => true,
+            'message' => 'Form update successfully',
+            'form' => $form
+        );
+
+        return response()->json($res, 200);
     }
 
     /**
