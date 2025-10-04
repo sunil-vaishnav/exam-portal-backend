@@ -18,7 +18,7 @@ class CreateSubmissionsTable extends Migration
             $table->integer('form_id');
             $table->integer('user_id');
             $table->json('data');
-            $table->enum('status', ['pending','paid','rejected'])->default('pending');
+            $table->enum('status', ['submitted','pending','rejected'])->default('submitted');
             $table->timestamps();
         });
     }

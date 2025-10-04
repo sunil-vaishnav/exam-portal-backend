@@ -17,10 +17,14 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->integer('submission_id');
             $table->integer('user_id');
-            $table->decimal('amount', 10, 2);
-            $table->enum('provider', ['razorpay', 'stripe']);
-            $table->string('transaction_id')->nullable();
-            $table->enum('status', ['success', 'failed', 'pending'])->default('pending');
+            $table->bigInteger('amount'); 
+            $table->string('currency')->default('INR');
+            $table->string('razorpay_order_id')->nullable();
+            $table->string('razorpay_payment_id')->nullable();
+            $table->string('razorpay_signature')->nullable();
+            $table->string('receipt_path')->nullable(); 
+            $table->enum('status', ['created', 'paid', 'failed'])->default('created');
+            $table->json('meta')->nullable();
             $table->timestamps();
         });
     }

@@ -17,8 +17,10 @@ class CreateFormsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->json('fields');
-            $table->integer('created_by');
+            $table->json('fields')->nullable();
+            $table->boolean('active')->default(true);
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
             $table->timestamps();
         });
     }
