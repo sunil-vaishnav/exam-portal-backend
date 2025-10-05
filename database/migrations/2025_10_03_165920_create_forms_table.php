@@ -18,6 +18,7 @@ class CreateFormsTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->json('fields')->nullable();
+            $table->decimal('fee', 10, 2)->default(0); 
             $table->boolean('active')->default(true);
             $table->dateTime('start_at')->nullable();
             $table->dateTime('end_at')->nullable();

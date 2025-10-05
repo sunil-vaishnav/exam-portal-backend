@@ -44,6 +44,7 @@ class FormController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'fields' => 'nullable|array',
+            'fee' => 'required',
             'start_at' => 'nullable|date',
             'end_at' => 'nullable|date',
         ]);
@@ -55,6 +56,7 @@ class FormController extends Controller
         $form = new Form();
         $form->title = $request->title;
         $form->description = isset($request->description) && !empty($request->description) ? $request->description : null;
+        $form->fee = $request->fee;
         $form->fields = isset($request->fields) && !empty($request->fields) ? json_encode($request->fields) : null;
         $form->start_at = isset($request->start_at) && !empty($request->start_at) ? Carbon::parse($request->start_at) : null;
         $form->end_at = isset($request->end_at) && !empty($request->end_at) ? Carbon::parse($request->end_at) : null;
@@ -117,6 +119,7 @@ class FormController extends Controller
         $form->title = $request->title;
         $form->description = isset($request->description) && !empty($request->description) ? $request->description : $form->description;
         $form->fields = isset($request->fields) && !empty($request->fields) ? json_encode($request->fields) : $form->fields;
+        $form->fee = isset($request->fee) && !empty($request->fee) ? $request->fee : $form->fee;
         $form->start_at = isset($request->start_at) && !empty($request->start_at) ? Carbon::parse($request->start_at) : $request->start_at;
         $form->end_at = isset($request->end_at) && !empty($request->end_at) ? Carbon::parse($request->end_at) : $request->end_at;
         $form->update();
