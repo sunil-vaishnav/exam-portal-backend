@@ -13,7 +13,7 @@
 2. Run `composer install`
 2. Run `php artisan storage:link`
 3. Setup `.env`
-4. Databse Connection in env file
+4. Database Connection in env file
 5. Run migrations: `php artisan migrate`
 6. Set Razorpay key in env : `RAZORPAY_KEY` and `RAZORPAY_SECRET`
 
@@ -25,22 +25,9 @@
 
 # Publish vendor files where required
 
-`php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"` 
-`php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"` 
-
-
-## Auth guard (JWT) config
-`config/auth.php`
-
-'guards' => [
-    'api' => [
-        'driver' => 'jwt',
-        'provider' => 'users',
-    ],
-    // ...
-],
-
-`php artisan jwt:secret"` 
+1.`php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"` 
+2. `php artisan vendor:publish --provider="Barryvdh\DomPDF\ServiceProvider"` 
+3.`php artisan jwt:secret"` 
 
 ## API Docs
 Postman collection available in `/docs/Exam Portal.postman_collection.json`
